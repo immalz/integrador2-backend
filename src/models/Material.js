@@ -15,7 +15,7 @@ const MaterialSchema = new Schema({
     },
     cantidad: {
         type: String,
-        required: true
+        required: false
     },
     proveedor: [{
         ref: "Proveedor",

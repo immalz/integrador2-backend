@@ -1,5 +1,6 @@
 import Usuario from "../models/Usuario";
 import Historial from "../models/Historial"
+import Role from "../models/Role";
 
 export const obtenerUsuarios = async(req, res) => {
     const Usuarios = await Usuario.find();
@@ -21,18 +22,23 @@ export const actualizarUsuario = async(req, res) => {
     const {
         nombre,
         correo,
+        roles,
         responsable
     } = req.body;
 
     const myquery = { _id: req.params._id };
 
+    const foundRoles = await Role.find({ nombre: { $in: roles } });
+    const newrol = foundRoles.map(role => role._id)
+
     const UsuarioActualizado = await Usuario.updateOne(myquery, {
         nombre,
         correo,
+        'roles': newrol
     }, {
         new: true
     })
-
+    
     const newActividad = new Historial({
         titulo: 'Usuarios',
         descripcion: 'Se ha actualizo el usuario: ' + nombre,

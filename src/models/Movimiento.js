@@ -11,7 +11,11 @@ const MovimientoSchema = new Schema({
         required: true
     },
     cantidad: {
-        type: String,
+        type: Number,
+        required: true
+    },
+    stock: {
+        type: Number,
         required: true
     },
     responsable: [{

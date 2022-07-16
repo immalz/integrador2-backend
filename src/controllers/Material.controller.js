@@ -1,5 +1,6 @@
 import Material from "../models/Material";
 import Historial from "../models/Historial"
+import Movimiento from "../models/Movimiento"
 
 export const crearMaterial = async(req, res) => {
 
@@ -91,7 +92,7 @@ export const eliminarMaterial = async(req, res) => {
         responsable
     } = req.body;
 
-    const proveedorEliminado = await Material.findByIdAndDelete(_id);
+    const productoEliminado = await Material.findByIdAndDelete(_id);
 
     const newActividad = new Historial({
         titulo: 'Material',
@@ -99,7 +100,7 @@ export const eliminarMaterial = async(req, res) => {
         responsable
     })
     
-    if (proveedorEliminado) {
+    if (productoEliminado) {
         const savedHistory = await newActividad.save();
     }
 

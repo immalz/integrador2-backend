@@ -1,35 +1,49 @@
 import Movimiento from "../models/Movimiento";
 import Historial from "../models/Historial"
+import Material from "../models/Material";
 
 export const crearMovimiento = async(req, res) => {
 
     const { 
         material,
         tipo,
-        cantidad,
+        valor,
+        stock,
         responsable
     } = req.body;
 
     const newActividad = new Historial({
         titulo: 'Ingreso y Salida',
-        descripcion: 'Se ha registrado correctamente',
+        descripcion: 'Se hizo un nuevo movimiento',
         responsable
     })
 
     const nuevoMaterial = new Movimiento({
         material,
         tipo,
-        cantidad,
+        'cantidad': valor,
+        stock,
         responsable
     });
 
-    const proveedorGuardado = await nuevoMaterial.save();
+    const materialGuardado = await nuevoMaterial.save();
+   
 
-    if (proveedorGuardado) {
+    const actualizarMaterial = await Material.findOneAndUpdate({_id: material}, {cantidad: stock}, {
+        useFindAndModify: false
+    }, (err) => {
+        if(err) {
+            consol.elog(err)
+        }
+        console.log('movimiento actualizado')
+    });
+
+
+    if (materialGuardado) {
         const savedHistory = await newActividad.save();
     }
 
-    res.status(201).json({ proveedorGuardado });
+    res.status(201).json({ materialGuardado });
 }
 
 
@@ -50,6 +64,7 @@ export const actualizarMovimiento = async(req, res) => {
         material,
         tipo,
         cantidad,
+        stock,
         responsable
     } = req.body;
 
@@ -65,6 +80,7 @@ export const actualizarMovimiento = async(req, res) => {
         material,
         tipo,
         cantidad,
+        stock,
         responsable
     }, {
         new: true

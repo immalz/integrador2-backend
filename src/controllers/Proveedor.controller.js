@@ -1,5 +1,6 @@
 import Proveedor from "../models/Proveedor";
 import Historial from "../models/Historial"
+import Material from "../models/Material";
 
 export const crearProveedor = async(req, res) => {
 
@@ -67,12 +68,11 @@ export const actualizarProveedor = async(req, res) => {
     })
 
     const updateProveedor = await Proveedor.updateOne(myquery, {
-        nombre,
+        razon_social,
         correo,
         ruc,
-        razon_social,
         celular,
-        encargado
+        encargado,
     }, {
         new: true
     })
@@ -94,6 +94,8 @@ export const eliminarProveedor = async(req, res) => {
     } = req.body;
 
     const proveedorEliminado = await Proveedor.findByIdAndDelete(_id);
+
+    const materialesEliminados = await Material.deleteMany({ proveedor: { $in: _id } });
 
     const newActividad = new Historial({
         titulo: 'Proveedor',
